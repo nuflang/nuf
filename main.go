@@ -17,14 +17,11 @@ func main() {
 	}
 
 	tokens := lexer.Tokenize(string(landmarkBytes))
-	// for _, token := range tokens {
-	// 	token.Debug()
-	// }
 
 	ast := parser.Parse(tokens)
-	// litter.Dump(ast)
 
 	html := codegen.GenerateHTML(ast)
+
 	landmarkGeneratedFile := "./test-data/landmarks/generated.html"
 	err = os.WriteFile(landmarkGeneratedFile, []byte(html), 0400)
 	if err != nil {
