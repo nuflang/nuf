@@ -13,17 +13,15 @@ type parser struct {
 	// errors []error
 }
 
-func Parse(tokens []lexer.Token) ast.BlockStatement {
-	body := make([]ast.BlockStatement, 0)
+func Parse(tokens []lexer.Token) ast.Program {
+	program := ast.Program{Page: ast.Page{Body: make([]ast.BlockStatement, 0)}}
 	parser := createParser(tokens)
 
 	for parser.hasTokens() {
-		body = append(body, parseLandmarkBlockStatement(parser))
+		program.Page.Body = append(program.Page.Body, parseLandmarkBlockStatement(parser))
 	}
 
-	return ast.BlockStatement{
-		Body: body,
-	}
+	return program
 }
 
 func createParser(tokens []lexer.Token) *parser {

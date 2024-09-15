@@ -9,26 +9,48 @@ import (
 	"github.com/nuflang/nuf/parser"
 )
 
-func TestNufToHTML(t *testing.T) {
-	landmarkInputFile := "./test-data/landmarks/input.nuf"
-	landmarkInputBytes, err := os.ReadFile(landmarkInputFile)
+// func TestNufToHTMLLandmarks(t *testing.T) {
+// 	inputFilePathname := "./test-data/landmarks/landmarks_input.nuf"
+// 	inputBytes, err := os.ReadFile(inputFilePathname)
+// 	if err != nil {
+// 		t.Fatalf("Failed to read input file: %s", inputFilePathname)
+// 	}
+//
+// 	// outputFilePathname := "./test-data/landmarks/landmarks_output.html"
+// 	// outputBytes, err := os.ReadFile(outputFilePathname)
+// 	// if err != nil {
+// 	// 	t.Fatalf("Failed to read output file: %s", outputFilePathname)
+// 	// }
+//
+// 	tokens := lexer.Tokenize(string(inputBytes))
+// 	ast := parser.Parse(tokens)
+// 	litter.Dump(ast)
+//
+// 	// html := codegen.GenerateHTML(ast)
+//
+// 	// if html != string(outputBytes) {
+// 	// 	t.Errorf("Expected: %s, Got: %s", string(outputBytes), html)
+// 	// }
+// }
+
+func TestNufToHTMLLandmarksWithHeadings(t *testing.T) {
+	inputFilePathname := "./test-data/landmarks/landmarks_with_headings_input.nuf"
+	inputBytes, err := os.ReadFile(inputFilePathname)
 	if err != nil {
-		t.Fatalf("Failed to read input file: %s", landmarkInputFile)
+		t.Fatalf("Failed to read input file: %s", inputFilePathname)
 	}
 
-	landmarkOutputFile := "./test-data/landmarks/output.html"
-	landmarkOutputBytes, err := os.ReadFile(landmarkOutputFile)
+	outputFilePathname := "./test-data/landmarks/landmarks_with_headings_output.html"
+	outputBytes, err := os.ReadFile(outputFilePathname)
 	if err != nil {
-		t.Fatalf("Failed to read output file: %s", landmarkOutputFile)
+		t.Fatalf("Failed to read output file: %s", outputFilePathname)
 	}
 
-	tokens := lexer.Tokenize(string(landmarkInputBytes))
-
+	tokens := lexer.Tokenize(string(inputBytes))
 	ast := parser.Parse(tokens)
-
 	html := codegen.GenerateHTML(ast)
 
-	if html != string(landmarkOutputBytes) {
-		t.Errorf("Expected: %s, Got: %s", string(landmarkOutputBytes), html)
+	if html != string(outputBytes) {
+		t.Errorf("Expected: %s, Got: %s", string(outputBytes), html)
 	}
 }

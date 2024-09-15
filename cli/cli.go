@@ -14,8 +14,8 @@ func RunCLI() {
 	generateCmd := flag.NewFlagSet("generate", flag.ExitOnError)
 
 	if len(os.Args) < 2 {
-        os.Exit(1)
-    }
+		os.Exit(1)
+	}
 
 	switch os.Args[1] {
 	case "generate":

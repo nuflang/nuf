@@ -26,4 +26,5 @@ func blockStatement(kind lexer.TokenKind, blockStatementFunc blockStatementHandl
 
 func createTokenLookups() {
 	blockStatement(lexer.GREATER, parseLandmarkBlockStatement)
+	blockStatement(lexer.PLUS, parseHeadingBlockStatement)
 }
