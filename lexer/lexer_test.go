@@ -11,7 +11,7 @@ func TestStringToken(t *testing.T) {
 	lex := NewLexer(input)
 
 	tests := []struct {
-		expectedType token.TokenType
+		expectedType    token.TokenType
 		expectedLiteral string
 	}{
 		{token.STRING, "Hello, World!"},
@@ -22,11 +22,11 @@ func TestStringToken(t *testing.T) {
 		tok := lex.NextToken()
 
 		if tok.Type != test.expectedType {
-			t.Fatalf("Wrong token type. Expected %d, got %d", test.expectedType, tok.Type)
+			t.Fatalf("Wrong token type. Expected %d. Got %d.", test.expectedType, tok.Type)
 		}
 
 		if tok.Literal != test.expectedLiteral {
-			t.Fatalf("Wrong token literal. Expected %s, got %s", test.expectedLiteral, tok.Literal)
+			t.Fatalf("Wrong token literal. Expected %s. Got %s.", test.expectedLiteral, tok.Literal)
 		}
 	}
 }
