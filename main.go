@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/nuflang/nuf/cli"
+	"fmt"
 )
 
 func main() {
-	cli.RunCLI()
+	fmt.Println("Hello world")
 }
