@@ -33,14 +33,14 @@ func TestStringToken(t *testing.T) {
 }
 
 func TestFunctionCallTokens(t *testing.T) {
-	input := `heading("Hello, World!");`
+	input := `section_title("Hello, World!");`
 	lex := NewLexer(input)
 
 	tests := []struct {
 		expectedType    token.TokenType
 		expectedLiteral string
 	}{
-		{token.IDENT, "heading"},
+		{token.IDENT, "section_title"},
 		{token.LPAREN, "("},
 		{token.STRING, "Hello, World!"},
 		{token.RPAREN, ")"},

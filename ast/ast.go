@@ -44,7 +44,23 @@ type StringLiteral struct {
 }
 
 func (sl *StringLiteral) expressionNode() {}
-
 func (sl *StringLiteral) TokenLiteral() string {
 	return sl.Token.Literal
 }
+
+type Identifier struct {
+	Token token.Token // the token.IDENT token
+	Value string
+}
+
+func (i *Identifier) expressionNode()      {}
+func (i *Identifier) TokenLiteral() string { return i.Token.Literal }
+
+type CallExpression struct {
+	Token     token.Token // The '(' token
+	Function  Expression  // Identifier or FunctionLiteral
+	Arguments []Expression
+}
+
+func (ce *CallExpression) expressionNode()      {}
+func (ce *CallExpression) TokenLiteral() string { return ce.Token.Literal }
