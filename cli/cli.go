@@ -7,6 +7,7 @@ import (
 
 	"github.com/nuflang/nuf/evaluator"
 	"github.com/nuflang/nuf/lexer"
+	"github.com/nuflang/nuf/object"
 	"github.com/nuflang/nuf/parser"
 )
 
@@ -32,7 +33,8 @@ func RunCLI() {
 		p := parser.NewParser(lex)
 		program := p.ParseProgram()
 		output := evaluator.NewOutput()
-		output.Eval(program)
+		env := object.NewEnvironment()
+		output.Eval(program, env)
 
 		err = os.WriteFile(outputFilename, []byte(output.Value), 0600)
 		if err != nil {

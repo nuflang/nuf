@@ -5,11 +5,10 @@ import (
 
 	"github.com/nuflang/nuf/ast"
 	"github.com/nuflang/nuf/lexer"
-	"github.com/sanity-io/litter"
 )
 
 func TestStringLiteralExpression(t *testing.T) {
-	input := `"Hello, World!";`
+	input := `"Paragraph";`
 	l := lexer.NewLexer(input)
 	p := NewParser(l)
 	program := p.ParseProgram()
@@ -19,18 +18,16 @@ func TestStringLiteralExpression(t *testing.T) {
 	if !ok {
 		t.Fatalf("Expected `StringLiteral`. Got `%T`.", statement.Expression)
 	}
-	if literal.Value != "Hello, World!" {
-		t.Errorf("Expected `%s`. Got `%q`.", "Hello, World!", literal.Value)
+	if literal.Value != "Paragraph" {
+		t.Errorf("Expected `%s`. Got `%q`.", "Paragraph", literal.Value)
 	}
 }
 
 func TestCallExpression(t *testing.T) {
-	input := `section_title("Hello, World!");`
+	input := `section_title("Heading");`
 	l := lexer.NewLexer(input)
 	p := NewParser(l)
 	program := p.ParseProgram()
-
-	litter.Dump(program)
 
 	if len(program.Statements) != 1 {
 		t.Fatalf("Program.Statements does not contain `%d` statement. Got `%d`.", 1, len(program.Statements))
@@ -58,8 +55,8 @@ func TestCallExpression(t *testing.T) {
 	if !ok {
 		t.Fatalf("Expected `StringLiteral`. Got `%T`.", statement.Expression)
 	}
-	if literal.TokenLiteral() != "Hello, World!" {
-		t.Errorf("Expected `%s`. Got `%q`.", "Hello, World!", literal.TokenLiteral())
+	if literal.TokenLiteral() != "Heading" {
+		t.Errorf("Expected `%s`. Got `%q`.", "Heading", literal.TokenLiteral())
 	}
 }
 

@@ -7,14 +7,14 @@ import (
 )
 
 func TestStringToken(t *testing.T) {
-	input := `"Hello, World!";`
+	input := `"Paragraph";`
 	lex := NewLexer(input)
 
 	tests := []struct {
 		expectedType    token.TokenType
 		expectedLiteral string
 	}{
-		{token.STRING, "Hello, World!"},
+		{token.STRING, "Paragraph"},
 		{token.SEMICOLON, ";"},
 		{token.EOF, ""},
 	}
@@ -33,7 +33,7 @@ func TestStringToken(t *testing.T) {
 }
 
 func TestFunctionCallTokens(t *testing.T) {
-	input := `section_title("Hello, World!");`
+	input := `section_title("Heading");`
 	lex := NewLexer(input)
 
 	tests := []struct {
@@ -42,7 +42,7 @@ func TestFunctionCallTokens(t *testing.T) {
 	}{
 		{token.IDENT, "section_title"},
 		{token.LPAREN, "("},
-		{token.STRING, "Hello, World!"},
+		{token.STRING, "Heading"},
 		{token.RPAREN, ")"},
 		{token.SEMICOLON, ";"},
 		{token.EOF, ""},
