@@ -14,6 +14,40 @@ Converts `nuf` file into `html`
 go run main.go generate ./test_data/text.nuf ./test_data/text.html
 ```
 
+## Syntax
+
+### Paragraph
+
+Input:
+
+```nuf
+"Paragraph 1";
+"Paragraph 2";
+```
+
+Output:
+
+```html
+<p>Paragraph 1</p>
+<p>Paragraph 2</p>
+```
+
+### Heading
+
+Input:
+
+```nuf
+section_title("Heading 1");
+section_title("Heading 2");
+```
+
+Output:
+
+```html
+<h1>Heading 1</h1>
+<h1>Heading 2</h1>
+```
+
 ---
 
 ## Attribution
