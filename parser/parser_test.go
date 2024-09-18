@@ -8,7 +8,7 @@ import (
 )
 
 func TestStringLiteralExpression(t *testing.T) {
-	input := `"Hello, World!"`
+	input := `"Hello, World!";`
 	l := lexer.NewLexer(input)
 	p := NewParser(l)
 	program := p.ParseProgram()

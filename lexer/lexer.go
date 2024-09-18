@@ -22,12 +22,18 @@ func (lex *Lexer) NextToken() token.Token {
 	lex.skipWhitespace()
 
 	switch lex.ch {
+	case ';':
+		tok.Type = token.SEMICOLON
+		tok.Literal = string(lex.ch)
 	case '"':
 		tok.Type = token.STRING
 		tok.Literal = lex.readString()
 	case 0:
 		tok.Type = token.EOF
 		tok.Literal = ""
+	default:
+		tok.Type = token.ILLEGAL
+		tok.Literal = string(lex.ch)
 	}
 
 	lex.readChar()

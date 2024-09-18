@@ -1,6 +1,6 @@
 package token
 
-type TokenType int
+type TokenType byte
 
 type Token struct {
 	Type    TokenType
@@ -10,6 +10,8 @@ type Token struct {
 const (
 	ILLEGAL = iota
 	EOF
+
+	SEMICOLON
 
 	STRING
 )

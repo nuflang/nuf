@@ -65,17 +65,21 @@ func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 		Expression: p.parseExpression(),
 	}
 
+	if p.peekToken.Type == token.SEMICOLON {
+		p.nextToken()
+	}
+
 	return statement
 }
 
 func (p *Parser) parseExpression() ast.Expression {
-	prefix := p.prefixParseFns[p.currentToken.Type]
+	prefixFn := p.prefixParseFns[p.currentToken.Type]
 
-	if prefix == nil {
+	if prefixFn == nil {
 		return nil
 	}
 
-	return prefix()
+	return prefixFn()
 }
 
 func (p *Parser) nextToken() {

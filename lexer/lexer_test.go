@@ -7,7 +7,7 @@ import (
 )
 
 func TestStringToken(t *testing.T) {
-	input := `  "Hello, World!"  `
+	input := `"Hello, World!";`
 	lex := NewLexer(input)
 
 	tests := []struct {
@@ -15,6 +15,7 @@ func TestStringToken(t *testing.T) {
 		expectedLiteral string
 	}{
 		{token.STRING, "Hello, World!"},
+		{token.SEMICOLON, ";"},
 		{token.EOF, ""},
 	}
 
