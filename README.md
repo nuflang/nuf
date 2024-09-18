@@ -1,5 +1,19 @@
 # Nuf language
 
+## Commands
+
+### Generate
+
+Converts `nuf` file into `html`
+
+`generate <input-file-pathname> <output-file-pathname>` where:
+- `<input-file-pathname>` - `.nuf` file
+- `<output-file-pathname>` - `.html` file
+
+```sh
+go run main.go generate ./test_data/text.nuf ./test_data/text.html
+```
+
 ---
 
 ## Attribution
