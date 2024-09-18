@@ -11,7 +11,21 @@ const (
 	ILLEGAL = iota
 	EOF
 
+	IDENT
+	STRING
+
 	SEMICOLON
 
-	STRING
+	LPAREN
+	RPAREN
 )
+
+var keywords = map[string]TokenType{}
+
+func LookupIdent(ident string) TokenType {
+	if tok, ok := keywords[ident]; ok {
+		return tok
+	}
+
+	return IDENT
+}

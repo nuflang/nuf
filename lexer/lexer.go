@@ -23,22 +23,31 @@ func (lex *Lexer) NextToken() token.Token {
 
 	switch lex.ch {
 	case ';':
-		tok.Type = token.SEMICOLON
-		tok.Literal = string(lex.ch)
+		tok = newToken(token.SEMICOLON, string(lex.ch))
+	case '(':
+		tok = newToken(token.LPAREN, string(lex.ch))
+	case ')':
+		tok = newToken(token.RPAREN, string(lex.ch))
 	case '"':
-		tok.Type = token.STRING
-		tok.Literal = lex.readString()
+		tok = newToken(token.STRING, lex.readString())
 	case 0:
-		tok.Type = token.EOF
-		tok.Literal = ""
+		tok = newToken(token.EOF, "")
 	default:
-		tok.Type = token.ILLEGAL
-		tok.Literal = string(lex.ch)
+		if isLetter(lex.ch) {
+			tok = newToken(token.LookupIdent(tok.Literal), lex.readIdentifier())
+			return tok
+		}
+
+		tok = newToken(token.ILLEGAL, string(lex.ch))
 	}
 
 	lex.readChar()
 
 	return tok
+}
+
+func newToken(tokenType token.TokenType, literal string) token.Token {
+	return token.Token{Type: tokenType, Literal: literal}
 }
 
 func (lex *Lexer) readChar() {
@@ -70,4 +79,18 @@ func (lex *Lexer) skipWhitespace() {
 	for lex.ch == ' ' || lex.ch == '\t' || lex.ch == '\n' || lex.ch == '\r' {
 		lex.readChar()
 	}
+}
+
+func (l *Lexer) readIdentifier() string {
+	position := l.position
+
+	for isLetter(l.ch) {
+		l.readChar()
+	}
+
+	return l.input[position:l.position]
+}
+
+func isLetter(ch byte) bool {
+	return 'a' <= ch && ch <= 'z'
 }
