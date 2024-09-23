@@ -1,6 +1,8 @@
 package parser
 
 import (
+	"fmt"
+
 	"github.com/nuflang/nuf/ast"
 	"github.com/nuflang/nuf/token"
 )
@@ -42,4 +44,17 @@ func (p *Parser) peekPrecedence() byte {
 	}
 
 	return LOWEST
+}
+
+func (p *Parser) currentPrecedence() byte {
+	if precedence, ok := precedences[p.currentToken.Type]; ok {
+		return precedence
+	}
+
+	return LOWEST
+}
+
+func (p *Parser) noPrefixParseFnError(tok token.TokenType) {
+	msg := fmt.Sprintf("No prefix parse function for %d found", tok)
+	p.errors = append(p.errors, msg)
 }

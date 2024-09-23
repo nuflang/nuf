@@ -30,11 +30,18 @@ func (lex *Lexer) NextToken() token.Token {
 		tok = newToken(token.RPAREN, string(lex.ch))
 	case '"':
 		tok = newToken(token.STRING, lex.readString())
+	case '-':
+		if lex.peekChar() == '-' {
+			ch := lex.ch
+			lex.readChar()
+			tok = newToken(token.CUSTOM_NAME_PREFIX, string(ch)+string(lex.ch))
+		}
 	case 0:
 		tok = newToken(token.EOF, "")
 	default:
 		if isLetter(lex.ch) {
-			tok = newToken(token.LookupIdent(tok.Literal), lex.readIdentifier())
+			tok.Literal = lex.readIdentifier()
+			tok.Type = token.LookupIdent(tok.Literal)
 			return tok
 		}
 
@@ -44,53 +51,4 @@ func (lex *Lexer) NextToken() token.Token {
 	lex.readChar()
 
 	return tok
-}
-
-func newToken(tokenType token.TokenType, literal string) token.Token {
-	return token.Token{Type: tokenType, Literal: literal}
-}
-
-func (lex *Lexer) readChar() {
-	if lex.readPosition >= len(lex.input) {
-		lex.ch = 0
-	} else {
-		lex.ch = lex.input[lex.readPosition]
-	}
-
-	lex.position = lex.readPosition
-	lex.readPosition += 1
-}
-
-func (lex *Lexer) readString() string {
-	position := lex.position + 1
-
-	for {
-		lex.readChar()
-
-		if lex.ch == '"' || lex.ch == 0 {
-			break
-		}
-	}
-
-	return lex.input[position:lex.position]
-}
-
-func (lex *Lexer) skipWhitespace() {
-	for lex.ch == ' ' || lex.ch == '\t' || lex.ch == '\n' || lex.ch == '\r' {
-		lex.readChar()
-	}
-}
-
-func (l *Lexer) readIdentifier() string {
-	position := l.position
-
-	for isLetter(l.ch) {
-		l.readChar()
-	}
-
-	return l.input[position:l.position]
-}
-
-func isLetter(ch byte) bool {
-	return 'a' <= ch && ch <= 'z' || ch == '_'
 }

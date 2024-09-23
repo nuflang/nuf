@@ -60,6 +60,41 @@ func TestCallExpression(t *testing.T) {
 	}
 }
 
+func TestInfixExpression(t *testing.T) {
+	input := `section_title("Heading 1") inside --main;`
+
+	l := lexer.NewLexer(input)
+	p := NewParser(l)
+	program := p.ParseProgram()
+
+	if len(program.Statements) != 1 {
+		t.Fatalf("Program.Statements does not contain `%d` statement. Got `%d`.", 1, len(program.Statements))
+	}
+
+	statement, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("Expected `CallExpression` statement. Got `%T`", program.Statements[0])
+	}
+
+	expression, ok := statement.Expression.(*ast.InfixExpression)
+	if !ok {
+		t.Fatalf("Expected `InfixExpression` expression. Got `%T`.", statement.Expression)
+	}
+
+	if expression.Operator != "inside" {
+		t.Fatalf("Expected `%s` operator. Got `%s`.", "inside", expression.Operator)
+	}
+
+	customNameExpression, ok := expression.Right.(*ast.CustomNameExpression)
+	if !ok {
+		t.Fatalf("Expected `CustomNameExpression` expression. Got `%T`.", statement.Expression)
+	}
+
+	if customNameExpression.Value != "main" {
+		t.Fatalf("Expected value `%s`. Got `%s`.", "main", customNameExpression.Value)
+	}
+}
+
 func testIdentifier(t *testing.T, expression ast.Expression, value string) bool {
 	identifier, ok := expression.(*ast.Identifier)
 
