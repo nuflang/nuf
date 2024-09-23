@@ -27,7 +27,7 @@ var builtins = map[string]*object.Builtin{
 				switch arg.Value {
 				case "main":
 					return &object.HTMLNode{Tag: "main", CustomName: "main"}
-				case "navigation":
+				case "site_navigation":
 					return &object.HTMLNode{Tag: "nav", CustomName: "nav"}
 				default:
 					return newError("Unrecognized section `%s`.", arg.Value)

@@ -48,6 +48,40 @@ Output:
 <h1>Heading 2</h1>
 ```
 
+### Sections
+
+Input:
+
+```nuf
+section("site_navigation");
+section("main");
+```
+
+Output:
+
+```html
+<nav></nav>
+<main></main>
+```
+
+### Adding elements inside other elements
+
+Input:
+
+```nuf
+section_title("Heading 1") inside --main;
+
+section("main");
+```
+
+Output:
+
+```html
+<main>
+    <h1>Heading 1</h1>
+</main>
+```
+
 ---
 
 ## Attribution
