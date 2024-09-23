@@ -34,9 +34,11 @@ func RunCLI() {
 		program := p.ParseProgram()
 		output := evaluator.NewOutput()
 		env := object.NewEnvironment()
-		output.Eval(program, env)
+		output.Eval(program, env, false)
+		htmlNodes := output.FlattenNodes(output.Node)
+		html := output.GenerateHTML(htmlNodes, true)
 
-		err = os.WriteFile(outputFilename, []byte(output.Value), 0600)
+		err = os.WriteFile(outputFilename, []byte(html), 0600)
 		if err != nil {
 			log.Fatalf("Failed to write file %s: %s", outputFilename, err)
 		}

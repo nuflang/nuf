@@ -64,3 +64,21 @@ type CallExpression struct {
 
 func (ce *CallExpression) expressionNode()      {}
 func (ce *CallExpression) TokenLiteral() string { return ce.Token.Literal }
+
+type CustomNameExpression struct {
+	Token token.Token
+	Value string
+}
+
+func (cne *CustomNameExpression) expressionNode()      {}
+func (cne *CustomNameExpression) TokenLiteral() string { return cne.Token.Literal }
+
+type InfixExpression struct {
+	Token    token.Token
+	Left     Expression
+	Operator string
+	Right    Expression
+}
+
+func (ie *InfixExpression) expressionNode()      {}
+func (ie *InfixExpression) TokenLiteral() string { return ie.Token.Literal }

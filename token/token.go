@@ -18,9 +18,16 @@ const (
 
 	LPAREN
 	RPAREN
+
+	CUSTOM_NAME_PREFIX // --
+
+	// Keywords
+	INSIDE
 )
 
-var keywords = map[string]TokenType{}
+var keywords = map[string]TokenType{
+	"inside": INSIDE,
+}
 
 func LookupIdent(ident string) TokenType {
 	if tok, ok := keywords[ident]; ok {
