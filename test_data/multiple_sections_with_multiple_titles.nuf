@@ -1,0 +1,8 @@
+section_title("Heading 1") inside --main;
+section_title("Heading 2") inside --region_1;
+
+section("site_navigation");
+section("main");
+section("region", {
+    name: --region_1,
+});
