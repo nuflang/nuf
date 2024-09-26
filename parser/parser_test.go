@@ -9,6 +9,7 @@ import (
 
 func TestStringLiteralExpression(t *testing.T) {
 	input := `"Paragraph";`
+
 	l := lexer.NewLexer(input)
 	p := NewParser(l)
 	program := p.ParseProgram()
@@ -25,6 +26,7 @@ func TestStringLiteralExpression(t *testing.T) {
 
 func TestCallExpression(t *testing.T) {
 	input := `section_title("Heading");`
+
 	l := lexer.NewLexer(input)
 	p := NewParser(l)
 	program := p.ParseProgram()
@@ -60,6 +62,51 @@ func TestCallExpression(t *testing.T) {
 	}
 }
 
+func TestCallExpressionWithMultipleArguments(t *testing.T) {
+	input := `section_title("Heading", "Argument");`
+
+	l := lexer.NewLexer(input)
+	p := NewParser(l)
+	program := p.ParseProgram()
+
+	if len(program.Statements) != 1 {
+		t.Fatalf("Program.Statements does not contain `%d` statement. Got `%d`.", 1, len(program.Statements))
+	}
+
+	statement, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("Expected `ExpressionStatement` statement. Got `%T`", program.Statements[0])
+	}
+
+	expression, ok := statement.Expression.(*ast.CallExpression)
+	if !ok {
+		t.Fatalf("Expected `CallExpression` expression. Got `%T`.", statement.Expression)
+	}
+
+	if !testIdentifier(t, expression.Function, "section_title") {
+		return
+	}
+
+	if len(expression.Arguments) != 2 {
+		t.Fatalf("Expected `%d` argument. Got `%d`.", 2, len(expression.Arguments))
+	}
+
+	literal := expression.Arguments[0]
+	if !ok {
+		t.Fatalf("Expected `StringLiteral`. Got `%T`.", statement.Expression)
+	}
+	if literal.TokenLiteral() != "Heading" {
+		t.Errorf("Expected `%s`. Got `%q`.", "Heading", literal.TokenLiteral())
+	}
+
+	literal = expression.Arguments[1]
+	if !ok {
+		t.Fatalf("Expected `StringLiteral`. Got `%T`.", statement.Expression)
+	}
+	if literal.TokenLiteral() != "Argument" {
+		t.Errorf("Expected `%s`. Got `%q`.", "Argument", literal.TokenLiteral())
+	}
+}
 func TestInfixExpression(t *testing.T) {
 	input := `section_title("Heading 1") inside --main;`
 
