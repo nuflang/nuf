@@ -1,4 +1,4 @@
-section_title("Heading 1") inside --main;
-
 section("site_navigation");
 section("main");
+
+section_title("Heading 1") inside --main;

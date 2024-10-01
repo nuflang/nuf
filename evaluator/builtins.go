@@ -1,8 +1,6 @@
 package evaluator
 
-import (
-	"github.com/nuflang/nuf/object"
-)
+import "github.com/nuflang/nuf/object"
 
 var builtins = map[string]*object.Builtin{
 	"section_title": {

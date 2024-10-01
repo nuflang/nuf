@@ -9,36 +9,29 @@ import (
 )
 
 type Output struct {
-	Node      map[string]map[string][]object.HTMLNode
+	Node      map[string][]object.HTMLNode
 	HTMLValue string
 	NodeOrder []string
 }
 
 func NewOutput() *Output {
 	return &Output{
-		Node: map[string]map[string][]object.HTMLNode{
-			"standalone":  {},
-			"combination": {},
-		},
+		Node: map[string][]object.HTMLNode{},
 		NodeOrder: []string{},
 		HTMLValue: "",
 	}
 }
 
-func (o *Output) GenerateHTML(nodes []object.HTMLNode, shouldIndent bool) string {
+func (o *Output) GenerateHTML(nodes []object.HTMLNode, isParent bool) string {
 	for _, node := range nodes {
-		openTag := "<" + node.Tag + ">"
-		if shouldIndent {
-			openTag += "\n    "
+		openTag := ""
+		if isParent {
+			openTag += "<" + node.Tag + ">"
 		}
 
 		closeTag := ""
-		if shouldIndent {
-			closeTag += "\n"
-		}
-		closeTag += "</" + node.Tag + ">"
-		if shouldIndent {
-			closeTag += "\n\n"
+		if isParent {
+			closeTag += "</" + node.Tag + ">"
 		}
 
 		o.HTMLValue += openTag
@@ -48,9 +41,11 @@ func (o *Output) GenerateHTML(nodes []object.HTMLNode, shouldIndent bool) string
 		}
 
 		text := node.Text
-
 		if text != "" {
+			openTag += "<" + node.Tag + ">"
+			o.HTMLValue += openTag
 			o.HTMLValue += text
+			closeTag += "</" + node.Tag + ">"
 		}
 
 		o.HTMLValue += closeTag
@@ -59,19 +54,10 @@ func (o *Output) GenerateHTML(nodes []object.HTMLNode, shouldIndent bool) string
 	return o.HTMLValue
 }
 
-func (o *Output) FlattenNodes(nodes map[string]map[string][]object.HTMLNode) []object.HTMLNode {
+func (o *Output) FlattenNodes(allNodes map[string][]object.HTMLNode) []object.HTMLNode {
 	result := make([]object.HTMLNode, len(o.NodeOrder))
 
-	for _, nodes := range nodes["combination"] {
-		for _, node := range nodes {
-			index := slices.Index(o.NodeOrder, node.CustomName)
-			if index != -1 {
-				result[index] = node
-			}
-		}
-	}
-
-	for _, nodes := range nodes["standalone"] {
+	for _, nodes := range allNodes {
 		for _, node := range nodes {
 			index := slices.Index(o.NodeOrder, node.CustomName)
 			if index != -1 {
@@ -112,16 +98,13 @@ func (o *Output) Eval(node ast.Node, env *object.Environment, skip bool) object.
 			customName := result.(*object.HTMLNode).CustomName
 			htmlNode := *result.(*object.HTMLNode)
 
-			if customName != "" && o.Node["standalone"][customName] == nil && htmlNode.Children == nil && o.Node["combination"][customName] == nil {
-				o.Node["standalone"][customName] = append(o.Node["standalone"][customName], htmlNode)
-			}
-
+			o.Node[customName] = append(o.Node[customName], htmlNode)
 			o.NodeOrder = append(o.NodeOrder, customName)
 		}
 
 		return result
 	case *ast.CustomNameExpression:
-		htmlNodes := o.Node["standalone"][node.Value]
+		htmlNodes := o.Node[node.Value]
 		if len(htmlNodes) == 0 {
 			return newError("Element with custom name %s not found", node.Value)
 		}
@@ -138,14 +121,13 @@ func (o *Output) Eval(node ast.Node, env *object.Environment, skip bool) object.
 		}
 
 		customName := result.(*object.HTMLNode).CustomName
-		if customName != "" && o.Node["combination"][customName] == nil {
-			htmlNode := *result.(*object.HTMLNode)
-			o.Node["combination"][customName] = append(o.Node["combination"][customName], htmlNode)
+		htmlNode := *result.(*object.HTMLNode)
 
-			if o.Node["standalone"][customName] != nil {
-				delete(o.Node["standalone"], customName)
-			}
+		if len(o.Node[customName]) == 0 {
+			o.Node[customName] = make([]object.HTMLNode, 1)
 		}
+
+		o.Node[customName][0].Children = append(o.Node[customName][0].Children, htmlNode)
 
 		return result
 	case *ast.HashLiteral:

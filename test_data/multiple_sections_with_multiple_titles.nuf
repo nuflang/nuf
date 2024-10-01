@@ -1,12 +1,7 @@
 section("main");
-
-section("region", {
-    "name": "section_one",
-});
-
-section("region", {
-    "name": "section_two",
-});
+section("region", { "name": "section_one" });
+section("region", { "name": "section_two" });
 
 section_title("Heading 1") inside --section_one;
 section_title("Heading 2") inside --section_two;
+section_title("Heading 3") inside --section_two;
