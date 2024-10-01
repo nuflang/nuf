@@ -1,8 +1,12 @@
-section_title("Heading 1") inside --main;
-section_title("Heading 2") inside --custom_region;
-
-section("site_navigation");
 section("main");
+
 section("region", {
-    name: --custom_region,
+    "name": "section_one",
 });
+
+section("region", {
+    "name": "section_two",
+});
+
+section_title("Heading 1") inside --section_one;
+section_title("Heading 2") inside --section_two;

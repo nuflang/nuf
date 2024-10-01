@@ -121,14 +121,21 @@ func (o *Output) Eval(node ast.Node, env *object.Environment, skip bool) object.
 
 		return result
 	case *ast.CustomNameExpression:
-		result := &object.HTMLNode{Tag: node.Value, CustomName: node.Value}
+		htmlNodes := o.Node["standalone"][node.Value]
+		if len(htmlNodes) == 0 {
+			return newError("Element with custom name %s not found", node.Value)
+		}
 
-		return result
+		return &htmlNodes[0]
 	case *ast.InfixExpression:
 		left := o.Eval(node.Left, env, true)
 		right := o.Eval(node.Right, env, true)
 
 		result := o.evalInfixExpression(node.Operator, left, right)
+		if result == nil {
+			// FIXME: Better error message
+			return newError("Couldn't evaluate infix expression")
+		}
 
 		customName := result.(*object.HTMLNode).CustomName
 		if customName != "" && o.Node["combination"][customName] == nil {
@@ -141,6 +148,8 @@ func (o *Output) Eval(node ast.Node, env *object.Environment, skip bool) object.
 		}
 
 		return result
+	case *ast.HashLiteral:
+		return o.evalHashLiteral(node, env)
 	}
 
 	return nil
@@ -212,6 +221,34 @@ func (o *Output) evalInsideInfixExpression(left, right object.Object) object.Obj
 			},
 		},
 		CustomName: right.(*object.HTMLNode).CustomName,
+	}
+}
+
+func (o *Output) evalHashLiteral(node *ast.HashLiteral, env *object.Environment) object.Object {
+	pairs := make(map[object.HashKey]object.HashPair)
+
+	for keyNode, valueNode := range node.Pairs {
+		key := o.Eval(keyNode, env, false)
+		if isError(key) {
+			return key
+		}
+
+		hashKey, ok := key.(object.Hashable)
+		if !ok {
+			return newError("Unusable as hash key: %s", key.Type())
+		}
+
+		value := o.Eval(valueNode, env, false)
+		if isError(value) {
+			return value
+		}
+
+		hashed := hashKey.HashKey()
+		pairs[hashed] = object.HashPair{Key: key, Value: value}
+	}
+
+	return &object.Hash{
+		Pairs: pairs,
 	}
 }
 
