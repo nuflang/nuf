@@ -16,7 +16,7 @@ type Output struct {
 
 func NewOutput() *Output {
 	return &Output{
-		Node: map[string][]object.HTMLNode{},
+		Node:      map[string][]object.HTMLNode{},
 		NodeOrder: []string{},
 		HTMLValue: "",
 	}
