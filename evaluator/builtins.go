@@ -5,9 +5,6 @@ import "github.com/nuflang/nuf/object"
 var builtins = map[string]*object.Builtin{
 	"section_title": {
 		Fn: func(args ...object.Object) object.Object {
-			if len(args) != 1 {
-				return newError("Expected `1` argument. Got `%d`.", len(args))
-			}
 			switch arg := args[0].(type) {
 			case *object.String:
 				// FIXME: Support multiple heading level
@@ -19,16 +16,28 @@ var builtins = map[string]*object.Builtin{
 	},
 	"section": {
 		Fn: func(args ...object.Object) object.Object {
-			if len(args) != 1 {
-				return newError("Expected `1` argument. Got `%d`.", len(args))
+			properties := object.Hash{}.Pairs
+			customName := args[0].Inspect()
+
+			if len(args) > 1 {
+				properties = args[1].(*object.Hash).Pairs
+
+				for _, hashPair := range properties {
+					if hashPair.Key.Inspect() == "name" {
+						customName = hashPair.Value.Inspect()
+					}
+				}
 			}
+
 			switch arg := args[0].(type) {
 			case *object.String:
 				switch arg.Value {
 				case "main":
-					return &object.HTMLNode{Tag: "main", CustomName: "main"}
+					return &object.HTMLNode{Tag: "main", CustomName: customName}
 				case "site_navigation":
-					return &object.HTMLNode{Tag: "nav", CustomName: "nav"}
+					return &object.HTMLNode{Tag: "nav", CustomName: customName}
+				case "region":
+					return &object.HTMLNode{Tag: "section", CustomName: customName}
 				default:
 					return newError("Unrecognized section `%s`.", arg.Value)
 				}
