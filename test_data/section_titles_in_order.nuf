@@ -1,0 +1,8 @@
+section("region", { "name": "section_one" });
+section("region", { "name": "section_two" });
+section("region", { "name": "section_three" });
+
+section_title("Heading 1", { "name": "heading_one" }) inside --section_one;
+section_title("Heading 2") under --heading_one inside --section_two;
+section_title("Heading 3", { "name": "heading_three" }) under --heading_one inside --section_two;
+section_title("Heading 4") under --heading_three inside --section_three;
