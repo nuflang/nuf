@@ -61,6 +61,46 @@ func TestFunctionCallTokens(t *testing.T) {
 	}
 }
 
+func TestFunctionCallWithOptionsTokens(t *testing.T) {
+	input := `section("region", { name: --custom_region, option: "value" });`
+	lex := NewLexer(input)
+
+	tests := []struct {
+		expectedType    token.TokenType
+		expectedLiteral string
+	}{
+		{token.IDENT, "section"},
+		{token.LPAREN, "("},
+		{token.STRING, "region"},
+		{token.COMMA, ","},
+		{token.LBRACE, "{"},
+		{token.IDENT, "name"},
+		{token.COLON, ":"},
+		{token.CUSTOM_NAME_PREFIX, "--"},
+		{token.IDENT, "custom_region"},
+		{token.COMMA, ","},
+		{token.IDENT, "option"},
+		{token.COLON, ":"},
+		{token.STRING, "value"},
+		{token.RBRACE, "}"},
+		{token.RPAREN, ")"},
+		{token.SEMICOLON, ";"},
+		{token.EOF, ""},
+	}
+
+	for _, test := range tests {
+		tok := lex.NextToken()
+
+		if tok.Type != test.expectedType {
+			t.Fatalf("Wrong token type. Expected %d. Got %d.", test.expectedType, tok.Type)
+		}
+
+		if tok.Literal != test.expectedLiteral {
+			t.Fatalf("Wrong token literal. Expected %s. Got %s.", test.expectedLiteral, tok.Literal)
+		}
+	}
+}
+
 func TestKeywords(t *testing.T) {
 	input := `inside`
 	lex := NewLexer(input)

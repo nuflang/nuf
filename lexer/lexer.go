@@ -22,12 +22,20 @@ func (lex *Lexer) NextToken() token.Token {
 	lex.skipWhitespace()
 
 	switch lex.ch {
+	case ',':
+		tok = newToken(token.COMMA, string(lex.ch))
+	case ':':
+		tok = newToken(token.COLON, string(lex.ch))
 	case ';':
 		tok = newToken(token.SEMICOLON, string(lex.ch))
 	case '(':
 		tok = newToken(token.LPAREN, string(lex.ch))
 	case ')':
 		tok = newToken(token.RPAREN, string(lex.ch))
+	case '{':
+		tok = newToken(token.LBRACE, string(lex.ch))
+	case '}':
+		tok = newToken(token.RBRACE, string(lex.ch))
 	case '"':
 		tok = newToken(token.STRING, lex.readString())
 	case '-':
